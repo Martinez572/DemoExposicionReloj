@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mi exposición · demo en reloj</title>
+<style>
+:root{--p:#6C4DF6;--ink:#1F1A4D;--mu:#7D79AB;--t:rgba(108,77,246,.12);--b:rgba(108,77,246,.22)}
+*{box-sizing:border-box;margin:0;font-family:system-ui,"Segoe UI",Roboto,sans-serif}
+body{min-height:100vh;background:linear-gradient(160deg,#fff,#E9E4FF);color:var(--ink);display:flex;flex-wrap:wrap;gap:44px;align-items:center;justify-content:center;padding:36px 24px}
+.wrap{position:relative}
+#watch{position:relative;width:min(92vw,82vh,380px);aspect-ratio:1;border-radius:50%;background:#1b1633;padding:11px;box-shadow:0 24px 50px rgba(60,40,160,.35),inset 0 0 0 3px #3a3166}
+#watch:before{content:"";position:absolute;right:-10px;top:40%;width:11px;height:18%;background:#3a3166;border-radius:0 7px 7px 0}
+#scr{position:relative;width:100%;height:100%;border-radius:50%;overflow:hidden;background:linear-gradient(#fff,#EFEBFF);touch-action:pan-y;user-select:none}
+.shake{animation:sh .1s 10}
+@keyframes sh{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+#in{position:absolute;inset:0;overflow-y:auto;padding:40px 32px;display:flex;flex-direction:column;align-items:center;gap:7px;scrollbar-width:none}
+#in::-webkit-scrollbar{display:none}
+#in>*{flex-shrink:0}#in>:first-child{margin-top:auto}#in>:last-child{margin-bottom:auto}
+#in.pr{padding:24px 36px 28px}
+h2{font-size:15px;font-weight:800;text-align:center}
+.btn{width:100%;border:0;border-radius:99px;padding:11px 14px;font-weight:600;font-size:14px;background:var(--p);color:#fff;cursor:pointer}
+.btn.o{background:var(--t);color:var(--p)}
+.card{width:100%;background:#fff;border:1px solid var(--b);border-radius:20px;padding:9px 14px;font-size:14px;font-weight:600;cursor:pointer}
+.card small{display:block;font-size:10px;color:var(--mu);font-weight:400}
+.stp{display:flex;align-items:center;gap:4px}
+.rb{width:38px;height:38px;border-radius:50%;border:1px solid var(--b);background:#fff;color:var(--p);font-size:22px;font-weight:700;cursor:pointer}
+.big{font-size:30px;font-weight:800;text-align:center;line-height:1.1}
+.hint{font-size:11px;color:var(--mu);text-align:center}
+.bar{width:34px;height:4px;border-radius:9px;background:var(--p)}
+.pre{display:flex;gap:6px;width:100%}
+.pre button{flex:1;height:38px;border-radius:99px;border:1px solid var(--b);background:#fff;font-weight:600;font-size:14px;color:var(--ink);cursor:pointer}
+.pre .on{background:var(--p);color:#fff;border-color:var(--p)}
+.f{width:100%;padding:10px 12px;border-radius:18px;border:1px solid var(--b);font-size:15px;color:var(--ink)}
+.tmw{background:var(--t);border-radius:22px;padding:1px 14px}
+.tm{font-size:32px;font-weight:800}
+.chip{background:var(--t);color:var(--p);font-size:9px;font-weight:600;letter-spacing:1px;border-radius:99px;padding:2px 8px}
+.sct{font-size:14px;font-weight:600;color:var(--p);text-align:center}
+.kw{font-weight:800;text-align:center;line-height:1.15}
+.stepc{display:flex;flex-direction:column;align-items:center;gap:5px;margin:auto 0}
+.stepc.l{animation:iL .3s}.stepc.r{animation:iR .3s}
+@keyframes iL{from{transform:translateX(-40px);opacity:0}}
+@keyframes iR{from{transform:translateX(40px);opacity:0}}
+.dots{display:flex;gap:4px;align-items:center}.dots i{width:5px;height:5px;border-radius:50%;background:rgba(108,77,246,.25)}.dots i.on{width:8px;height:8px;background:var(--p)}
+.x{width:26px;height:26px;border-radius:50%;background:#fff;border:1px solid var(--b);color:var(--mu);font-size:11px;display:grid;place-items:center;cursor:pointer}
+.ck{width:72px;height:72px;border-radius:50%;background:var(--t);display:grid;place-items:center}.ck b{width:52px;height:52px;border-radius:50%;background:var(--p);color:#fff;font-size:28px;display:grid;place-items:center}
+.sc{width:64px;height:64px;border-radius:50%;border:5px solid var(--p);display:grid;place-items:center;font-size:24px;font-weight:800}
+.fb{width:100%;background:#fff;border:1px solid var(--b);border-radius:18px;padding:8px 12px;font-size:12px;line-height:1.35}.fb b{display:block;color:var(--p);font-size:11px;margin-bottom:2px}
+.spin{width:34px;height:34px;border:4px solid var(--t);border-top-color:var(--p);border-radius:50%;animation:rot .8s linear infinite}@keyframes rot{to{transform:rotate(360deg)}}
+.vb{position:absolute;left:50%;top:-30px;transform:translateX(-50%);background:var(--p);color:#fff;border-radius:99px;padding:5px 14px;font-weight:700;font-size:13px;opacity:0;transition:opacity .2s;white-space:nowrap}
+.panel{position:fixed;right:16px;bottom:70px;z-index:5;max-height:80vh;overflow:auto;box-shadow:0 12px 40px rgba(60,40,160,.25);width:min(92vw,340px);background:#fff;border:1px solid var(--b);border-radius:22px;padding:18px;display:none;flex-direction:column;gap:11px;font-size:13px}.panel.on{display:flex}#gear{position:fixed;right:16px;bottom:16px;z-index:6;width:44px;height:44px;border-radius:50%;border:1px solid var(--b);background:#fff;font-size:20px;cursor:pointer;box-shadow:0 4px 14px rgba(60,40,160,.2)}
+.panel label{display:flex;flex-direction:column;gap:5px}.panel label.c{flex-direction:row;align-items:center;gap:8px}
+.panel .f{font-size:13px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style></head><body>
+<div class="wrap"><div class="vb" id="vb">📳 ¡Vibración!</div>
+<div id="watch"><div id="scr"><div id="in"></div>
+<svg viewBox="0 0 100 100" style="position:absolute;inset:0;pointer-events:none;display:none"><circle cx="50" cy="50" r="46" fill="none" stroke="rgba(108,77,246,.14)" stroke-width="3.2"/><circle id="rg" cx="50" cy="50" r="46" fill="none" stroke="#6C4DF6" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="289" style="transform:rotate(-90deg);transform-origin:50% 50%;transition:stroke-dashoffset .2s linear"/></svg>
+</div></div><div class="hint" style="margin-top:18px">Arrastra ← → para cambiar de palabra · mantén pulsado ✕ para salir</div></div>
+<div class="panel" id="panel">
+<b style="font-size:16px">Mi exposición · demo en reloj</b>
+<label>API key de Anthropic (solo vive en este navegador)<input id="key" type="password" class="f" placeholder="sk-ant-..." autocomplete="off"></label>
+<label class="c"><input type="checkbox" id="mic" checked> 🎙️ Escuchar mi voz durante la exposición</label>
+<label class="c"><input type="checkbox" id="fast"> ⏩ Demo rápida (1 min = 6 s)</label>
+<label>Transcripción (se llena sola; puedes escribir o pegar)<textarea id="tr" rows="5" class="f"></textarea></label>
+<div id="st" class="hint" style="text-align:left"></div>
+<div class="hint" style="text-align:left">Desliza arrastrando con el mouse o con ← →. Mantén pulsado ✕ para salir.</div>
+</div>
+<button id="gear" title="Ajustes (API key, micrófono)">⚙️</button>
+<script>
+const $=q=>document.querySelector(q),S={scr:'home',dur:10,vib:true,rems:[],ri:-1,rv:1,notes:false,cnt:3,secs:[],si:0,steps:[],step:0,dir:'r',spent:[],rm:[]};
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt=s=>String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+const btn=(a,t,o)=>`<button class="btn${o?' o':''}" data-a="${a}">${t}</button>`;
+const stp=(v,u,k)=>`<div class="stp"><button class="rb" data-a="${k}-">−</button><div style="width:62px;text-align:center"><div class="big">${v}</div><div class="hint">${u}</div></div><button class="rb" data-a="${k}+">+</button></div>`;
+const row=(a,t,sub,i)=>`<div class="card" data-a="${a}" data-i="${i??''}">${esc(t)}${sub?`<small>${sub}</small>`:''}</div>`;
+const go=s=>{S.scr=s};
+const R={
+home:()=>`<div class="big" style="font-size:32px">Hola 👋</div><i class="bar"></i><div class="hint" style="font-size:13px">¿Listo para tu exposición?</div>${btn('go','Comenzar exposición')}`,
+dur:()=>`<h2>⏱️ ¿Cuánto durará?</h2>${stp(S.dur,'min','d')}<div class="pre">${[5,10,15].map(n=>`<button class="${S.dur==n?'on':''}" data-a="dset" data-i="${n}">${n}</button>`).join('')}</div>${btn('dother','Otra duración',1)}${btn('tovib','Siguiente')}${btn('home','Atrás',1)}`,
+vib:()=>`<h2>📳 Vibraciones</h2>${row('vtog',S.vib?'Activadas':'Desactivadas','Toca para cambiar')}${S.vib?(S.rems.length?S.rems.map((r,i)=>row('redit',r==1?'Falta 1 min':`Faltan ${r} min`,'Toca para editar',i)).join(''):'<div class="hint">Aún no hay recordatorios</div>')+btn('radd','+ Agregar',1):''}${btn('toask','Siguiente')}${btn('dur','Atrás',1)}`,
+rem:()=>`<h2>Vibrar cuando falten</h2>${stp(S.rv,S.rv==1?'minuto':'minutos','r')}${btn('rsave','Guardar')}${S.ri>=0?btn('rdel','Eliminar',1):''}${btn('tovib','Cancelar',1)}`,
+ask:()=>`<h2>📝 ¿Quieres utilizar notas?</h2>${btn('yes','Sí')}${btn('no','No',1)}${btn('tovib','Atrás',1)}`,
+cnt:()=>`<h2>¿Cuántas secciones?</h2>${stp(S.cnt,S.cnt==1?'sección':'secciones','c')}${btn('cnext','Siguiente')}${btn('toask','Atrás',1)}`,
+secs:()=>`<h2>Tus secciones</h2><div class="hint">Toca una para editarla</div>${S.secs.map((s,i)=>row('secedit',s.t,s.k.length==1?'1 palabra clave':s.k.length+' palabras clave',i)).join('')}${btn('yesgo','Comenzar exposición')}${btn('cnt','Atrás',1)}`,
+sec:()=>{const s=S.secs[S.si];return `<h2>Sección ${S.si+1}</h2>${row('ren',s.t,'Toca para cambiar el nombre')}<div class="hint">Palabras clave</div>${s.k.map((k,j)=>row('kedit',k,'',j)).join('')}${btn('kadd','+ Palabra clave',1)}${btn('tosecs','Listo')}`},
+txt:()=>`<h2>${esc(S.x.label)}</h2><input class="f" id="ti" value="${esc(S.x.val)}" ${S.x.num?'inputmode="numeric"':''} placeholder="Toca para escribir">${btn('tsave','Guardar')}${S.x.del?btn('tdel','Eliminar',1):''}${btn('tcancel','Cancelar',1)}`,
+pres:()=>{const t=S.steps[S.step],z=!t?0:t.k.length<=10?30:t.k.length<=22?22:17;return `<div class="tmw"><span class="tm" id="tm">00:00</span></div>${t?`<div class="stepc ${S.dir}"><span class="chip">SECCIÓN ${t.si+1} DE ${t.sc}</span><div class="sct">${esc(t.t)}</div><div class="kw" style="font-size:${z}px">${esc(t.k)}</div></div><div class="dots">${t.kn<=8?Array.from({length:t.kn},(_,i)=>`<i class="${i==t.ki?'on':''}"></i>`).join(''):`<span class="hint">${t.ki+1}/${t.kn}</span>`}</div>`:'<div class="hint" style="margin:auto 0">Sin notas</div>'}<div class="x" id="xb">✕</div>`},
+fin:()=>`<div class="ck"><b>✓</b></div><h2 style="font-size:16px">Exposición finalizada</h2><div style="color:var(--p);font-size:14px">¡Buen trabajo! 🎉</div>${btn('fbk','✨ Feedback de la IA')}${btn('home','Inicio',1)}`,
+fb:()=>{const f=S.fb;if(S.err)return `<h2>No se pudo</h2><div class="hint">${esc(S.err)}</div>${btn('fbk','Reintentar')}${btn('home','Inicio',1)}`;if(!f)return `<div class="spin"></div><div class="hint">Claude está analizando tu exposición…</div>`;const L=(t,a,i)=>a&&a.length?`<div class="fb"><b>${t}</b>${a.map(x=>`<div>${i} ${esc(x)}</div>`).join('')}</div>`:'';return `<div class="sc">${esc(f.nota??'-')}</div><h2>${esc(f.resumen||'')}</h2><div class="fb"><b>Ritmo</b>${esc(f.ritmo||'')}</div>${L('Lo mejor',f.fortalezas,'✓')}${L('A mejorar',f.mejorar,'→')}${L('Muletillas',f.muletillas,'•')}${L('Dijiste',f.cubiertas,'✓')}${L('Faltaron',f.omitidas,'○')}<div class="fb"><b>Consejo</b>${esc(f.consejo||'')}</div>${btn('home','Inicio')}`}
+};
+const ask=(label,val,ret,num,save,del)=>{S.x={label,val,ret,num,save,del};go('txt')};
+const A={
+go(){go('dur')},dur(){go('dur')},home(){go('home')},tovib(){go('vib')},toask(){go('ask')},cnt(){go('cnt')},tosecs(){go('secs')},
+'d-'(){S.dur=Math.max(1,S.dur-1)},'d+'(){S.dur=Math.min(180,S.dur+1)},dset(i){S.dur=+i},
+dother(){ask('¿Cuántos minutos?','','dur',1,v=>{S.dur=Math.min(180,Math.max(1,parseInt(v)||S.dur))})},
+vtog(){S.vib=!S.vib},radd(){S.ri=-1;S.rv=1;go('rem')},redit(i){S.ri=+i;S.rv=S.rems[+i];go('rem')},
+'r-'(){S.rv=Math.max(1,S.rv-1)},'r+'(){S.rv=Math.min(Math.max(1,S.dur-1),S.rv+1)},
+rsave(){S.rv=Math.min(S.rv,Math.max(1,S.dur-1));if(S.ri>=0)S.rems[S.ri]=S.rv;else S.rems.push(S.rv);S.rems=[...new Set(S.rems)].sort((a,b)=>b-a);go('vib')},
+rdel(){if(S.ri>=0)S.rems.splice(S.ri,1);go('vib')},
+yes(){S.notes=true;go('cnt')},no(){S.notes=false;start()},yesgo(){S.notes=true;start()},
+'c-'(){S.cnt=Math.max(1,S.cnt-1)},'c+'(){S.cnt=Math.min(10,S.cnt+1)},
+cnext(){while(S.secs.length<S.cnt)S.secs.push({t:'Sección '+(S.secs.length+1),k:[]});S.secs.length=S.cnt;go('secs')},
+secedit(i){S.si=+i;go('sec')},
+ren(){ask('Nombre de la sección',S.secs[S.si].t,'sec',0,v=>{S.secs[S.si].t=v})},
+kadd(){ask('Nueva palabra clave','','sec',0,v=>{S.secs[S.si].k.push(v)})},
+kedit(i){i=+i;ask('Editar palabra clave',S.secs[S.si].k[i],'sec',0,v=>{S.secs[S.si].k[i]=v},()=>{S.secs[S.si].k.splice(i,1)})},
+tsave(){const v=$('#ti').value.trim();if(v){S.x.save(v);go(S.x.ret)}},
+tdel(){S.x.del();go(S.x.ret)},tcancel(){go(S.x.ret)},
+fbk(){feedback()}
+};
+function draw(){const i=$('#in');i.className=S.scr=='pres'?'pr':'';i.innerHTML=R[S.scr]();$('#rg').parentNode.style.display=S.scr=='pres'?'block':'none';if(S.scr=='txt')$('#ti').focus();if(S.scr=='pres')tick()}
+function start(){
+S.steps=S.notes?S.secs.flatMap((s,si)=>s.k.map((k,ki)=>({si,sc:S.secs.length,t:s.t,k,ki,kn:s.k.length}))):[];
+S.step=0;S.dir='r';S.fast=$('#fast').checked;S.sp=S.fast?10:1;
+S.rm=S.vib?S.rems.filter(r=>r<S.dur):[];S.fired=new Set();S.spent=S.steps.map(()=>0);
+S.t0=S.mark=Date.now();S.end=S.t0+S.dur*60000/S.sp;S.fb=null;S.err='';$('#tr').value='';
+try{S.ac=S.ac||new(window.AudioContext||window.webkitAudioContext)();S.ac.resume()}catch(_){}
+if($('#mic').checked)listen(true);
+go('pres');clearInterval(S.iv);S.iv=setInterval(tick,200);draw()}
+function tick(){const v=Math.max(0,S.end-Date.now())*S.sp,sec=Math.ceil(v/1000),tm=$('#tm');
+if(tm){tm.textContent=fmt(sec);tm.style.color=sec<=60?'var(--p)':'var(--ink)'}
+$('#rg').style.strokeDashoffset=289*(1-v/(S.dur*60000));
+S.rm.forEach(r=>{if(sec<=r*60&&!S.fired.has(r)){S.fired.add(r);vibe()}});
+if(v<=0)finish()}
+function mv(d){const n=S.step+d;if(S.scr!='pres'||n<0||n>=S.steps.length)return;const now=Date.now();S.spent[S.step]+=(now-S.mark)*S.sp;S.mark=now;S.step=n;S.dir=d>0?'l':'r';draw()}
+function finish(){clearInterval(S.iv);const n=Date.now();if(S.steps.length)S.spent[S.step]+=(n-S.mark)*S.sp;S.real=n-S.t0;listen(false);if(S.vib)vibe();go('fin');draw()}
+function exit(){clearInterval(S.iv);listen(false);go('home');draw()}
+function vibe(){navigator.vibrate&&navigator.vibrate([400,150,400]);const w=$('#watch');w.classList.remove('shake');void w.offsetWidth;w.classList.add('shake');const b=$('#vb');b.style.opacity=1;setTimeout(()=>b.style.opacity=0,1800);
+try{const c=S.ac;[0,.55].forEach(d=>{const o=c.createOscillator(),g=c.createGain();o.frequency.value=880;g.gain.value=.15;o.connect(g);g.connect(c.destination);o.start(c.currentTime+d);o.stop(c.currentTime+d+.4)})}catch(_){}}
+function listen(on){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(!on){S.want=false;try{S.rec&&S.rec.stop()}catch(_){}$('#st').textContent='';return}
+if(!SR){$('#st').textContent='⚠️ Este navegador no tiene reconocimiento de voz: usa Chrome o escribe la transcripción.';return}
+S.want=true;const r=S.rec=new SR();r.lang='es-CO';r.continuous=true;r.interimResults=false;
+r.onresult=e=>{for(let i=e.resultIndex;i<e.results.length;i++)if(e.results[i].isFinal)$('#tr').value+=e.results[i][0].transcript+' '};
+r.onerror=e=>{$('#st').textContent='⚠️ Micrófono: '+e.error};
+r.onend=()=>{if(S.want)try{r.start()}catch(_){}};
+try{r.start();$('#st').textContent='🎙️ Escuchando…'}catch(_){}}
+async function feedback(){S.fb=null;S.err='';go('fb');draw();
+const key=$('#key').value.trim(),tr=$('#tr').value.trim();
+if(!key){S.err='Abre ⚙️ (abajo a la derecha) y pega tu API key.';return draw()}
+const w=tr?tr.split(/\s+/).length:0,wpm=Math.round(w/Math.max(.1,(S.real||60000)/60000));
+const kws=S.notes?S.secs.map(s=>`${s.t}: ${s.k.join(', ')}`).join('\n'):'(sin notas)';
+const sp=S.steps.map((t,i)=>`${t.t} › ${t.k}: ${Math.round((S.spent[i]||0)/1000)} s`).join('\n')||'(sin datos)';
+const prompt=`Eres un coach experto en oratoria. Analiza esta exposición y responde SOLO con un JSON válido, sin markdown ni texto extra, con estas claves: {"nota":número del 0 al 10,"resumen":"una frase","ritmo":"una frase sobre el ritmo (${wpm} palabras por minuto)","muletillas":["muletillas que detectes, vacío si ninguna"],"cubiertas":["palabras clave que sí mencionó"],"omitidas":["palabras clave que no mencionó"],"fortalezas":["máximo 3"],"mejorar":["máximo 3"],"consejo":"un consejo concreto para la próxima vez"}. Usa frases muy cortas porque se leerán en la pantalla de un reloj.
+Duración planeada: ${S.dur} min. ${S.fast?'La demo estaba acelerada: ignora el ritmo y los tiempos.':''}
+Palabras clave por sección:
+${kws}
+Tiempo en cada palabra clave:
+${sp}
+Transcripción:
+${tr||'(vacía: no se pudo transcribir; evalúa solo con los tiempos y avisa que falta la transcripción)'}`;
+try{const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'content-type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-5-5',max_tokens:900,messages:[{role:'user',content:prompt}]})});
+const j=await r.json();if(!r.ok)throw new Error(j.error?.message||r.status);
+const t=j.content.filter(b=>b.type=='text').map(b=>b.text).join('');S.fb=JSON.parse(t.slice(t.indexOf('{'),t.lastIndexOf('}')+1))}catch(e){S.err=e.message}
+draw()}
+document.addEventListener('click',e=>{const t=e.target.closest('[data-a]');if(!t)return;const f=A[t.dataset.a];f&&f(t.dataset.i);draw()});
+document.addEventListener('keydown',e=>{if(e.target.id=='ti'&&e.key=='Enter'){A.tsave();draw();return}if(/INPUT|TEXTAREA/.test(e.target.tagName))return;if(e.key=='ArrowRight')mv(1);else if(e.key=='ArrowLeft')mv(-1)});
+let x0=null;const sc=$('#scr');
+sc.addEventListener('pointerdown',e=>{x0=e.clientX;if(e.target.id=='xb')S.lp=setTimeout(exit,700)});
+sc.addEventListener('pointerup',e=>{clearTimeout(S.lp);if(x0!==null&&S.scr=='pres'){const d=e.clientX-x0;if(d>50)mv(1);else if(d<-50)mv(-1)}x0=null});
+sc.addEventListener('pointerleave',()=>clearTimeout(S.lp));
+try{$('#key').value=sessionStorage.getItem('k')||'';$('#key').addEventListener('input',e=>sessionStorage.setItem('k',e.target.value))}catch(_){}
+$('#gear').onclick=()=>$('#panel').classList.toggle('on');
+draw();
+</script></body></html>
